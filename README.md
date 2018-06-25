@@ -1,30 +1,41 @@
-[![Build Status](https://travis-ci.org/jonasschnelli/chacha20poly1305.svg?branch=master)](https://travis-ci.org/jonasschnelli/chacha20poly1305) 
+[![Build Status](https://travis-ci.org/jonasschnelli/cipherseed.svg?branch=master)](https://travis-ci.org/jonasschnelli/cipherseed) 
 
-chacha20/poly1305/chacha20poly1305 openssh aead
+cipherseed
 =====
 
-Simple C module for chacha20, poly1305 and chacha20poly1305@openssh AEAD
+128bit entropy
+----------------
+1 byte header unencrypted
+5 byte unencrypted pbkdf2-salt
+3 byte header encrypted (1 bit version, 15 bit birthday, 8 bit type)
+16 byte encrypted entropy
+<<<<<<< Local Changes
+4 byte primary MAC tag (tag covers salt || encrypted header || encrypted entropy)
+4 byte secondary MAC tag (tag covers salt || encrypted header || encrypted entropy)
+= Total 33 bytes
+=======
+4 byte primary MAC tag
+4 byte secondary MAC tag
+= Total 33 bytes (== 264 bits ~== 24 word mnemonic ~== 53 base32 chars without checksum)
+>>>>>>> External Changes
 
-Features:
-* Simple, pure C code without any dependencies.
+256bit entropy
+----------------
+1 byte header unencrypted
+5 byte unencrypted pbkdf2-salt
+3 byte header encrypted (1 bit version, 15 bit birthday, 8 bit type)
+32 byte encrypted  entropy
+<<<<<<< Local Changes
+4 byte primary MAC tag (tag covers salt || encrypted header || encrypted entropy)
+4 byte secondary MAC tag (tag covers salt || encrypted header || encrypted entropy)
+= Total 49 bytes
+=======
+4 byte primary MAC tag
+4 byte secondary MAC tag
+= Total 49 bytes (== 392 bits == 36 word mnemonic == 79 base32 chars without checksum)
+>>>>>>> External Changes
 
-Performance
------------
 
--
-
-Build steps
------------
-
-Object code:
-
-    $ gcc -O3 -c poly1305.c chacha.c chachapoly_aead.c
-
-Tests:
-
-    $ gcc -O3 poly1305.c chacha.c chachapoly_aead.c tests.c -o test
-
-Benchmark:
-
-    $ gcc -O3 poly1305.c chacha.c chachapoly_aead.c bench.c -o bench
-    
+Fields
+1 byte header unencrypted: allows to upgrade encryption scheme
+5 byte unencrypted pbkdf2-salt
